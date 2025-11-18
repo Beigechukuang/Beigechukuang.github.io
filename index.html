@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>思政引领 · 智航未来 - 无人机应用技术融合平台</title>
+  <!-- 引入外部资源 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#C72C41', // 思政红
+            secondary: '#165DFF', // 科技蓝
+            dark: '#1F2937',
+            light: '#F9FAFB',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .text-shadow-lg {
+        text-shadow: 0 4px 8px rgba(0,0,0,0.25);
+      }
+      .transition-custom {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+  </style>
+  
+  <style>
+    /* 全局样式 */
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    
+    /* 动画效果 */
+    .fade-in {
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .hover-scale {
+      transition: transform 0.3s ease;
+    }
+    .hover-scale:hover {
+      transform: scale(1.03);
+    }
+    
+    /* 渐变背景 */
+    .gradient-overlay {
+      background: linear-gradient(135deg, rgba(199,44,65,0.9) 0%, rgba(22,93,255,0.8) 100%);
+    }
+    
+    /* 导航栏滚动效果 */
+    .navbar-scrolled {
+      background-color: rgba(255,255,255,0.95);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+
+<body class="bg-light text-dark">
+  <!-- 导航栏 -->
+  <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-transparent">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <!-- 品牌标识 -->
+        <a href="#" class="flex items-center space-x-2">
+          <div class="w-10 h-10 rounded-lg gradient-overlay flex items-center justify-center">
+            <i class="fa fa-drone text-white text-xl"></i>
+          </div>
+          <span class="text-xl font-bold text-white text-shadow-lg">思政·智航</span>
+        </a>
+        
+        <!-- 桌面端导航 -->
+        <nav class="hidden md:flex items-center space-x-8">
+          <a href="#home" class="text-white hover:text-secondary transition-custom font-medium">首页</a>
+          <a href="#ideology" class="text-white hover:text-secondary transition-custom font-medium">思政元素</a>
+          <a href="#drone" class="text-white hover:text-secondary transition-custom font-medium">无人机技术</a>
+          <a href="#cases" class="text-white hover:text-secondary transition-custom font-medium">融合应用</a>
+          <a href="#links" class="text-white hover:text-secondary transition-custom font-medium">外部链接</a>
+          
+          <!-- 外部链接快捷按钮 -->
+          <a href="https://www.moe.gov.cn/" target="_blank" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full transition-custom flex items-center space-x-1">
+            <i class="fa fa-external-link"></i>
+            <span>教育部官网</span>
+          </a>
+        </nav>
+        
+        <!-- 移动端菜单按钮 -->
+        <button id="menuBtn" class="md:hidden text-white text-2xl">
+          <i class="fa fa-bars"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- 移动端导航菜单 -->
+    <div id="mobileMenu" class="md:hidden hidden bg-white shadow-lg absolute w-full">
+      <div class="container mx-auto px-4 py-3 space-y-3">
+        <a href="#home" class="block py-2 text-dark hover:text-primary transition-custom font-medium">首页</a>
+        <a href="#ideology" class="block py-2 text-dark hover:text-primary transition-custom font-medium">思政元素</a>
+        <a href="#drone" class="block py-2 text-dark hover:text-primary transition-custom font-medium">无人机技术</a>
+        <a href="#cases" class="block py-2 text-dark hover:text-primary transition-custom font-medium">融合应用</a>
+        <a href="#links" class="block py-2 text-dark hover:text-primary transition-custom font-medium">外部链接</a>
+        
+        <!-- 移动端外部链接 -->
+        <div class="pt-2 border-t border-gray-100">
+          <a href="https://www.moe.gov.cn/" target="_blank" class="block bg-primary/10 hover:bg-primary/20 text-primary px-4 py-2 rounded-lg transition-custom flex items-center space-x-1">
+            <i class="fa fa-external-link"></i>
+            <span>教育部官网</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 英雄区 -->
+  <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+    <!-- 背景图 -->
+    <div class="absolute inset-0 z-0">
+      <img src="https://picsum.photos/id/1002/1920/1080" alt="无人机与思政元素背景" class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-dark/50"></div>
+    </div>
+    
+    <!-- 内容 -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+      <div class="fade-in">
+        <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold text-white leading-tight text-shadow-lg mb-6">
+          思政引领 <span class="text-secondary">智航未来</span>
+        </h1>
+        <p class="text-[clamp(1rem,2vw,1.25rem)] text-white/90 max-w-3xl mx-auto mb-10 text-shadow">
+          融合思政教育与无人机应用技术，培养具有家国情怀、创新精神和实践能力的新时代人才
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="#ideology" class="bg-primary hover:bg-primary/90 text-white font-medium px-8 py-3 rounded-full transition-custom hover:shadow-lg transform hover:-translate-y-1">
+            探索思政元素
+          </a>
+          <a href="#drone" class="bg-secondary hover:bg-secondary/90 text-white font-medium px-8 py-3 rounded-full transition-custom hover:shadow-lg transform hover:-translate-y-1">
+            了解无人机技术
+          </a>
+        </div>
+      </div>
+      
+      <!-- 滚动指示器 -->
+      <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <a href="#ideology" class="text-white/80 hover:text-white text-2xl">
+          <i class="fa fa-angle-down"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 思政元素板块 -->
+  <section id="ideology" class="py-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">思政元素核心内涵</h2>
+        <div class="w-24 h-1 bg-primary mx-auto mb-6"></div>
+        <p class="text-gray-600 max-w-3xl mx-auto">
+          以思想政治教育为引领，将社会主义核心价值观融入无人机技术学习与应用全过程
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- 思政元素卡片1 -->
+        <div class="bg-gray-50 rounded-xl p-6 shadow-md hover-scale border border-gray-100">
+          <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+            <i class="fa fa-flag text-primary text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">家国情怀教育</h3>
+          <p class="text-gray-600 mb-4">
+            培养学生热爱祖国、服务人民的意识，将无人机技术应用于国家建设、应急救援等领域，践行科技报国使命。
+          </p>
+          <a href="https://www.xuexi.cn/" target="_blank" class="text-primary font-medium flex items-center hover:text-primary/80 transition-custom">
+            学习更多 <i class="fa fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+        
+        <!-- 思政元素卡片2 -->
+        <div class="bg-gray-50 rounded-xl p-6 shadow-md hover-scale border border-gray-100">
+          <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+            <i class="fa fa-heart text-primary text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">职业道德培养</h3>
+          <p class="text-gray-600 mb-4">
+            强调无人机操作的法律法规意识、安全责任意识和职业道德规范，培养学生诚实守信、敬业奉献的职业素养。
+          </p>
+          <a href="https://www.sac.net.cn/" target="_blank" class="text-primary font-medium flex items-center hover:text-primary/80 transition-custom">
+            行业规范 <i class="fa fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+        
+        <!-- 思政元素卡片3 -->
+        <div class="bg-gray-50 rounded-xl p-6 shadow-md hover-scale border border-gray-100">
+          <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+            <i class="fa fa-lightbulb-o text-primary text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">创新精神培育</h3>
+          <p class="text-gray-600 mb-4">
+            鼓励学生勇于探索、敢于创新，将无人机技术与社会需求相结合，培养解决实际问题的创新思维和实践能力。
+          </p>
+          <a href="https://www.most.gov.cn/" target="_blank" class="text-primary font-medium flex items-center hover:text-primary/80 transition-custom">
+            科技创新 <i class="fa fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+        
+        <!-- 思政元素卡片4 -->
+        <div class="bg-gray-50 rounded-xl p-6 shadow-md hover-scale border border-gray-100">
+          <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+            <i class="fa fa-users text-primary text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">团队协作精神</h3>
+          <p class="text-gray-600 mb-4">
+            通过无人机项目实践，培养学生的沟通协作能力、集体荣誉感和团队精神，实现个人与团队的共同发展。
+          </p>
+          <a href="https://www.edu.cn/" target="_blank" class="text-primary font-medium flex items-center hover:text-primary/80 transition-custom">
+            教育理念 <i class="fa fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+        
+        <!-- 思政元素卡片5 -->
+        <div class="bg-gray-50 rounded-xl p-6 shadow-md hover-scale border border-gray-100">
+          <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+            <i class="fa fa-balance-scale text-primary text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">法治观念树立</h3>
+          <p class="text-gray-600 mb-4">
+            普及无人机相关法律法规知识，培养学生的法治思维和依法办事能力，确保技术应用在法律框架内进行。
+          </p>
+          <a href="https://www.mca.gov.cn/" target="_blank" class="text-primary font-medium flex items-center hover:text-primary/80 transition-custom">
+            相关政策 <i class="fa fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+        
+        <!-- 思政元素卡片6 -->
+        <div class="bg-gray-50 rounded-xl p-6 shadow-md hover-scale border border-gray-100">
+          <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+            <i class="fa fa-leaf text-primary text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">生态文明意识</h3>
+          <p class="text-gray-600 mb-4">
+            引导学生运用无人机技术参与生态环境保护、资源调查等工作，培养可持续发展理念和生态文明意识。
+          </p>
+          <a href="https://www.mee.gov.cn/" target="_blank" class="text-primary font-medium flex items-center hover:text-primary/80 transition-custom">
+            环保应用 <i class="fa fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 无人机技术板块 -->
+  <section id="drone" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">无人机应用技术前沿</h2>
+        <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
+        <p class="text-gray-600 max-w-3xl mx-auto">
+          无人机技术作为新兴科技力量，正广泛应用于各行各业，成为推动社会发展的重要引擎
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <!-- 左侧：技术介绍 -->
+        <div>
+          <div class="space-y-8">
+            <!-- 技术特点1 -->
+            <div class="flex gap-4">
+              <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center flex-shrink-0 mt-1">
+                <i class="fa fa-cogs text-secondary text-xl"></i>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold mb-2">核心技术优势</h3>
+                <p class="text-gray-600">
+                  集成先进的飞控系统、导航技术、遥感技术和人工智能算法，实现高精度、智能化、长续航的飞行作业。
+                </p>
+              </div>
+            </div>
+            
+            <!-- 技术特点2 -->
+            <div class="flex gap-4">
+              <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center flex-shrink-0 mt-1">
+                <i class="fa fa-industry text-secondary text-xl"></i>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold mb-2">行业应用广泛</h3>
+                <p class="text-gray-600">
+                  涵盖农业植保、电力巡检、测绘勘探、应急救援、物流运输、影视航拍等多个领域，市场潜力巨大。
+                </p>
+              </div>
+            </div>
+            
+            <!-- 技术特点3 -->
+            <div class="flex gap-4">
+              <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center flex-shrink-0 mt-1">
+                <i class="fa fa-line-chart text-secondary text-xl"></i>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold mb-2">发展前景广阔</h3>
+                <p class="text-gray-600">
+                  随着5G、AI、物联网等技术的融合发展，无人机将向集群化、智能化、专业化方向迈进，应用场景持续拓展。
+                </p>
+              </div>
+            </div>
+            
+            <!-- 技术特点4 -->
+            <div class="flex gap-4">
+              <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center flex-shrink-0 mt-1">
+                <i class="fa fa-graduation-cap text-secondary text-xl"></i>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold mb-2">人才需求旺盛</h3>
+                <p class="text-gray-600">
+                  无人机行业快速发展催生大量专业人才需求，掌握核心技术并具备良好思政素养的复合型人才备受青睐。
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 外部链接按钮 -->
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a href="https://www.caac.gov.cn/" target="_blank" class="bg-secondary hover:bg-secondary/90 text-white font-medium px-6 py-3 rounded-full transition-custom hover:shadow-lg flex items-center">
+              <i class="fa fa-external-link mr-2"></i> 民航局无人机管理
+            </a>
+            <a href="https://www.dji.com/cn" target="_blank" class="bg-white hover:bg-gray-50 text-secondary border border-secondary font-medium px-6 py-3 rounded-full transition-custom hover:shadow-lg flex items-center">
+              <i class="fa fa-globe mr-2"></i> 技术参考
+            </a>
+          </div>
+        </div>
+        
+        <!-- 右侧：数据可视化 + 图片 -->
+        <div class="space-y-8">
+          <!-- 无人机应用领域分布图表 -->
+          <div class="bg-white rounded-xl p-6 shadow-md">
+            <h3 class="text-xl font-bold mb-4 text-center">无人机应用领域分布</h3>
+            <div class="h-80">
+              <canvas id="droneChart"></canvas>
+            </div>
+          </div>
+          
+          <!-- 无人机图片 -->
+          <div class="grid grid-cols-2 gap-4">
+            <img src="https://picsum.photos/id/1011/600/400" alt="工业无人机" class="rounded-lg shadow-md hover-scale w-full h-48 object-cover">
+            <img src="https://picsum.photos/id/1015/600/400" alt="农业无人机" class="rounded-lg shadow-md hover-scale w-full h-48 object-cover">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 融合应用案例 -->
+  <section id="cases" class="py-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">思政与无人机融合应用案例</h2>
+        <div class="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-6"></div>
+        <p class="text-gray-600 max-w-3xl mx-auto">
+          将思政教育融入无人机技术应用，在实践中践行社会主义核心价值观，服务国家和社会发展
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- 案例1 -->
+        <div class="group relative rounded-xl overflow-hidden shadow-lg hover-scale">
+          <img src="https://picsum.photos/id/1018/800/500" alt="应急救援应用" class="w-full h-64 object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-6">
+            <span class="inline-block px-3 py-1 bg-primary text-white text-sm rounded-full mb-3">应急救援</span>
+            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-secondary transition-custom">灾区救援与物资投送</h3>
+            <p class="text-white/80 mb-4">
+              利用无人机快速抵达灾区，进行灾情勘察、人员搜救和应急物资投送，体现"人民至上、生命至上"的价值理念。
+            </p>
+            <a href="https://www.emer-rescue.gov.cn/" target="_blank" class="inline-flex items-center text-white hover:text-secondary transition-custom">
+              了解更多救援案例 <i class="fa fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+        </div>
+        
+        <!-- 案例2 -->
+        <div class="group relative rounded-xl overflow-hidden shadow-lg hover-scale">
+          <img src="https://picsum.photos/id/1019/800/500" alt="生态保护应用" class="w-full h-64 object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-6">
+            <span class="inline-block px-3 py-1 bg-secondary text-white text-sm rounded-full mb-3">生态保护</span>
+            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-custom">生态环境监测与保护</h3>
+            <p class="text-white/80 mb-4">
+              运用无人机进行森林巡护、野生动物监测、污染源排查，践行生态文明思想，守护绿水青山。
+            </p>
+            <a href="https://www.mee.gov.cn/" target="_blank" class="inline-flex items-center text-white hover:text-primary transition-custom">
+              了解环保应用 <i class="fa fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+        </div>
+        
+        <!-- 案例3 -->
+        <div class="group relative rounded-xl overflow-hidden shadow-lg hover-scale">
+          <img src="https://picsum.photos/id/1036/800/500" alt="乡村振兴应用" class="w-full h-64 object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-6">
+            <span class="inline-block px-3 py-1 bg-primary text-white text-sm rounded-full mb-3">乡村振兴</span>
+            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-secondary transition-custom">智慧农业与农村发展</h3>
+            <p class="text-white/80 mb-4">
+              推广无人机植保、农田测绘、农产品物流等应用，助力农业现代化，服务乡村振兴战略，彰显科技助农情怀。
+            </p>
+            <a href="https://nongye.moa.gov.cn/" target="_blank" class="inline-flex items-center text-white hover:text-secondary transition-custom">
+              了解农业应用 <i class="fa fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+        </div>
+        
+        <!-- 案例4 -->
+        <div class="group relative rounded-xl overflow-hidden shadow-lg hover-scale">
+          <img src="https://picsum.photos/id/1047/800/500" alt="文化传承应用" class="w-full h-64 object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-6">
+            <span class="inline-block px-3 py-1 bg-secondary text-white text-sm rounded-full mb-3">文化传承</span>
+            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-custom">文物古迹保护与传承</h3>
+            <p class="text-white/80 mb-4">
+              利用无人机进行文物古迹航拍测绘、数字化存档和保护监测，传承中华优秀传统文化，增强文化自信。
+            </p>
+            <a href="https://www.ncha.gov.cn/" target="_blank" class="inline-flex items-center text-white hover:text-primary transition-custom">
+              了解文物保护 <i class="fa fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 外部链接聚合区 -->
+  <section id="links" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">相关外部资源链接</h2>
+        <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
+        <p class="text-gray-600 max-w-3xl mx-auto">
+          汇集思政教育、无人机技术、行业应用等相关优质外部资源，方便学习与交流
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- 链接分类1：思政教育 -->
+        <div class="bg-white rounded-xl p-6 shadow-md">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+              <i class="fa fa-book text-primary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold">思政教育资源</h3>
+          </div>
+          <ul class="space-y-3">
+            <li>
+              <a href="https://www.xuexi.cn/" target="_blank" class="flex items-center text-gray-700 hover:text-primary transition-custom p-2 rounded-lg hover:bg-primary/5">
+                <i class="fa fa-external-link text-primary mr-2"></i>
+                <span>学习强国平台</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.moe.gov.cn/" target="_blank" class="flex items-center text-gray-700 hover:text-primary transition-custom p-2 rounded-lg hover:bg-primary/5">
+                <i class="fa fa-external-link text-primary mr-2"></i>
+                <span>教育部官网</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.sppu.edu.cn/" target="_blank" class="flex items-center text-gray-700 hover:text-primary transition-custom p-2 rounded-lg hover:bg-primary/5">
+                <i class="fa fa-external-link text-primary mr-2"></i>
+                <span>中国特色社会主义理论体系研究中心</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.zgzg.gov.cn/" target="_blank" class="flex items-center text-gray-700 hover:text-primary transition-custom p-2 rounded-lg hover:bg-primary/5">
+                <i class="fa fa-external-link text-primary mr-2"></i>
+                <span>中国思想政治工作网</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- 链接分类2：无人机技术 -->
+        <div class="bg-white rounded-xl p-6 shadow-md">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mr-4">
+              <i class="fa fa-drone text-secondary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold">无人机技术资源</h3>
+          </div>
+          <ul class="space-y-3">
+            <li>
+              <a href="https://www.caac.gov.cn/" target="_blank" class="flex items-center text-gray-700 hover:text-secondary transition-custom p-2 rounded-lg hover:bg-secondary/5">
+                <i class="fa fa-external-link text-secondary mr-2"></i>
+                <span>中国民用航空局</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.dji.com/cn" target="_blank" class="flex items-center text-gray-700 hover:text-secondary transition-custom p-2 rounded-lg hover:bg-secondary/5">
+                <i class="fa fa-external-link text-secondary mr-2"></i>
+                <span>大疆创新</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.uavmro.com/" target="_blank" class="flex items-center text-gray-700 hover:text-secondary transition-custom p-2 rounded-lg hover:bg-secondary/5">
+                <i class="fa fa-external-link text-secondary mr-2"></i>
+                <span>无人机世界</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.cauav.org/" target="_blank" class="flex items-center text-gray-700 hover:text-secondary transition-custom p-2 rounded-lg hover:bg-secondary/5">
+                <i class="fa fa-external-link text-secondary mr-2"></i>
+                <span>中国航空学会无人机与通航分会</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- 链接分类3：行业应用 -->
+        <div class="bg-white rounded-xl p-6 shadow-md">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mr-4">
+              <i class="fa fa-briefcase text-secondary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold">行业应用资源</h3>
+          </div>
+          <ul class="space-y-3">
+            <li>
+              <a href="https://www.emer-rescue.gov.cn/" target="_blank" class="flex items-center text-gray-700 hover:text-secondary transition-custom p-2 rounded-lg hover:bg-secondary/5">
+                <i class="fa fa-external-link text-secondary mr-2"></i>
+                <span>国家应急管理部</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.mee.gov.cn/" target="_blank" class="flex items-center text-gray-700 hover:text-secondary transition-custom p-2 rounded-lg hover:bg-secondary/5">
+                <i class="fa fa-external-link text-secondary mr-2"></i>
+                <span>生态环境部</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://nongye.moa.gov.cn/" target="_blank" class="flex items-center text-gray-700 hover:text-secondary transition-custom p-2 rounded-lg hover:bg-secondary/5">
+                <i class="fa fa-external-link text-secondary mr-2"></i>
+                <span>农业农村部</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.ncha.gov.cn/" target="_blank" class="flex items-center text-gray-700 hover:text-secondary transition-custom p-2 rounded-lg hover:bg-secondary/5">
+                <i class="fa fa-external-link text-secondary mr-2"></i>
+                <span>国家文物局</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- 嵌入外部网页示例 -->
+      <div class="mt-12 bg-white rounded-xl p-6 shadow-md">
+        <h3 class="text-xl font-bold mb-4 flex items-center">
+          <i class="fa fa-embed text-secondary mr-2"></i>
+          嵌入式外部网页示例
+        </h3>
+        <div class="border border-gray-200 rounded-lg overflow-hidden h-96">
+          <iframe 
+            src="https://www.xuexi.cn/" 
+            class="w-full h-full"
+            title="学习强国平台嵌入式页面"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <p class="text-gray-500 text-sm mt-3">
+          提示：点击嵌入页面内的链接将在新窗口打开，确保浏览安全。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <!-- 关于我们 -->
+        <div>
+          <div class="flex items-center space-x-2 mb-6">
+            <div class="w-10 h-10 rounded-lg gradient-overlay flex items-center justify-center">
+              <i class="fa fa-drone text-white text-xl"></i>
+            </div>
+            <span class="text-xl font-bold">思政·智航</span>
+          </div>
+          <p class="text-gray-400 mb-4">
+            融合思政教育与无人机应用技术，培养新时代复合型人才
+          </p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white transition-custom">
+              <i class="fa fa-weixin text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-custom">
+              <i class="fa fa-weibo text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-custom">
+              <i class="fa fa-youtube-play text-xl"></i>
+            </a>
+          </div>
+        </div>
+        
+        <!-- 快速链接 -->
+        <div>
+          <h4 class="text-lg font-bold mb-6">快速链接</h4>
+          <ul class="space-y-3">
+            <li><a href="#home" class="text-gray-400 hover:text-white transition-custom">首页</a></li>
+            <li><a href="#ideology" class="text-gray-400 hover:text-white transition-custom">思政元素</a></li>
+            <li><a href="#drone" class="text-gray-400 hover:text-white transition-custom">无人机技术</a></li>
+            <li><a href="#cases" class="text-gray-400 hover:text-white transition-custom">融合应用</a></li>
+            <li><a href="#links" class="text-gray-400 hover:text-white transition-custom">外部链接</a></li>
+          </ul>
+        </div>
+        
+        <!-- 联系我们 -->
+        <div>
+          <h4 class="text-lg font-bold mb-6">联系我们</h4>
+          <ul class="space-y-3">
+            <li class="flex items-center">
+              <i class="fa fa-envelope text-primary mr-3"></i>
+              <span class="text-gray-400">contact@sizhihang.com</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fa fa-phone text-primary mr-3"></i>
+              <span class="text-gray-400">400-123-4567</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fa fa-map-marker text-primary mr-3"></i>
+              <span class="text-gray-400">北京市海淀区中关村南大街5号</span>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- 订阅 -->
+        <div>
+          <h4 class="text-lg font-bold mb-6">订阅更新</h4>
+          <p class="text-gray-400 mb-4">
+            订阅我们的 newsletter，获取最新的思政教育与无人机技术资讯
+          </p>
+          <form class="flex">
+            <input 
+              type="email" 
+              placeholder="您的邮箱地址" 
+              class="px-4 py-2 rounded-l-lg w-full focus:outline-none text-dark"
+            >
+            <button type="submit" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-r-lg transition-custom">
+              <i class="fa fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-500 text-sm mb-4 md:mb-0">
+          &copy; 2024 思政·智航 版权所有 | 京ICP备12345678号
+        </p>
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-custom">隐私政策</a>
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-custom">使用条款</a>
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-custom">网站地图</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 返回顶部按钮 -->
+  <button id="backToTop" class="fixed bottom-8 right-8 bg-primary hover:bg-primary/90 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-custom opacity-0 invisible">
+    <i class="fa fa-arrow-up"></i>
+  </button>
+
+  <!-- JavaScript -->
+  <script>
+    // 导航栏滚动效果
+    const navbar = document.getElementById('navbar');
+    const backToTop = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 50) {
+        navbar.classList.add('navbar-scrolled');
+        navbar.classList.remove('bg-transparent');
+        
+        // 更改导航链接颜色
+        const navLinks = navbar.querySelectorAll('nav a:not(.bg-white\\/20)');
+        navLinks.forEach(link => {
+          link.classList.remove('text-white');
+          link.classList.add('text-dark');
+        });
+        
+        // 更改品牌文字颜色
+        const brandText = navbar.querySelector('.font-bold');
+        brandText.classList.remove('text-white', 'text-shadow-lg');
+        brandText.classList.add('text-dark');
+        
+        // 显示返回顶部按钮
+        backToTop.classList.remove('opacity-0', 'invisible');
+        backToTop.classList.add('opacity-100', 'visible');
+      } else {
+        navbar.classList.remove('navbar-scrolled');
+        navbar.classList.add('bg-transparent');
+        
+        // 恢复导航链接颜色
+        const navLinks = navbar.querySelectorAll('nav a:not(.bg-white\\/20)');
+        navLinks.forEach(link => {
+          link.classList.add('text-white');
+          link.classList.remove('text-dark');
+        });
+        
+        // 恢复品牌文字颜色
+        const brandText = navbar.querySelector('.font-bold');
+        brandText.classList.add('text-white', 'text-shadow-lg');
+        brandText.classList.remove('text-dark');
+        
+        // 隐藏返回顶部按钮
+        backToTop.classList.add('opacity-0', 'invisible');
+        backToTop.classList.remove('opacity-100', 'visible');
+      }
+    });
+    
+    // 移动端菜单切换
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    menuBtn.addEventListener('click', function() {
+      mobileMenu.classList.toggle('hidden');
+      const icon = menuBtn.querySelector('i');
+      if (icon.classList.contains('fa-bars')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+      } else {
+        icon.classList.add('fa-bars');
+        icon.classList.remove('fa-times');
+      }
+    });
+    
+    // 返回顶部功能
+    backToTop.addEventListener('click', function() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // 无人机应用领域分布图表
+    const ctx = document.getElementById('droneChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['农业应用', '电力巡检', '测绘勘探', '应急救援', '物流运输', '影视航拍', '其他应用'],
+        datasets: [{
+          label: '应用领域分布',
+          data: [25, 18, 15, 12, 10, 8, 12],
+          backgroundColor: [
+            '#165DFF', // 科技蓝
+            '#C72C41', // 思政红
+            '#36B37E', // 绿色
+            '#FF5630', // 橙色
+            '#FFAB00', // 黄色
+            '#6554C0', // 紫色
+            '#8993A4'  // 灰色
+          ],
+          borderWidth: 0,
+          hoverOffset: 10
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 20,
+              font: {
+                size: 12
+              }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.label + ': ' + context.raw + '%';
+              }
+            }
+          }
+        },
+        cutout: '65%'
+      }
+    });
+    
+    // 外部链接跳转确认
+    document.querySelectorAll('a[target="_blank"]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const confirmLeave = confirm('即将跳转到外部网站，是否继续？');
+        if (!confirmLeave) {
+          e.preventDefault();
+        }
+      });
+    });
+    
+    // 页面加载动画
+    window.addEventListener('load', function() {
+      document.body.classList.add('loaded');
+    });
+  </script>
+</body>
+</html>
